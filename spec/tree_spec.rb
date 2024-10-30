@@ -16,13 +16,29 @@ RSpec.describe Tree do
 
       it "creates a balanced tree" do
         tree = subject
-        tree.build_tree([5, 2, 3, 4, 1])
-        expect()
+        tree.build_tree [5, 2, 3, 4, 1]
+        expect(tree.balanced?).to eql true
       end
     end
   end
 
   describe "#insert" do
+    context "when given an empty tree" do
+      it "adds the given node to the tree" do
+        tree = subject
+        tree.insert 3
+        expect(tree.find(3)).to_not be nil
+      end
+    end
+
+    context "when given a non-empty tree" do
+      it "adds the given node to the tree" do
+        tree = subject
+        tree.build_tree(Array.new(6) { rand(1..50) })
+        tree.insert(51)
+        expect(tree.find(51)).to_not eql nil
+      end
+    end
   end
 
   describe "#delete" do
