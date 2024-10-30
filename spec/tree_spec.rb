@@ -19,6 +19,12 @@ RSpec.describe Tree do
         tree.build_tree [5, 2, 3, 4, 1]
         expect(tree.balanced?).to eql true
       end
+
+      it "doesn't assign duplicate values" do
+        tree = subject
+        tree.build_tree [1, 2, 3, 4, 3, 1, 5]
+        expect(tree.inorder.size).to eql 5
+      end
     end
   end
 
@@ -37,6 +43,13 @@ RSpec.describe Tree do
         tree.build_tree(Array.new(6) { rand(1..50) })
         tree.insert(51)
         expect(tree.find(51)).to_not eql nil
+      end
+
+      it "doesn't assign duplicate values" do
+        tree = subject
+        tree.build_tree [1, 2, 3, 4, 5]
+        tree.insert(4)
+        expect(tree.inorder.size).to eql 5
       end
     end
   end
