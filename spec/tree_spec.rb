@@ -55,6 +55,40 @@ RSpec.describe Tree do
   end
 
   describe "#delete" do
+    context "when given an empty list" do
+      it "returns nil" do
+        expect(subject.delete(3)).to eql nil
+      end
+    end
+
+    context "when given a non-empty list" do
+      before do
+        @tree = subject
+        @tree.build_tree [1, 2, 3, 4, 5]
+      end
+
+      context "when deleting an existing element" do
+        it "returns the node data" do
+          expect(@tree.remove(4)).to eql 4
+        end
+
+        it "removes the node from the tree" do
+          @tree.remove 1
+          expect(@tree.find(1)).to eql nil
+        end
+
+        it "correctly removes and replaces the root node" do
+          @tree.remove 3
+          expect(@tree.root).to_not eql nil
+        end
+      end
+
+      context "when deleting a non-existent element" do
+        it "returns nil" do
+          expect(@tree.remove(10)).to eql nil
+        end
+      end
+    end
   end
 
   describe "#find" do
