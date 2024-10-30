@@ -1,5 +1,6 @@
 require "rspec"
 require_relative "../lib/tree"
+require_relative "../lib/node"
 
 RSpec.describe Tree do
   describe "#build-tree" do
@@ -92,6 +93,28 @@ RSpec.describe Tree do
   end
 
   describe "#find" do
+    context "when given an empty list" do
+      it "returns nil" do
+        expect(subject.find(rand(0..100))).to eql nil
+      end
+    end
+
+    context "when given a non-empty list" do
+      before do
+        @tree = subject
+        @tree.build_tree [1, 2, 3, 4, 5]
+      end
+
+      context "when asked for a non-existent value" do
+        it "returns nil" do
+          expect(@tree.find(11)).to eql nil
+        end
+      end
+
+      it "returns the node holding the given value" do
+        expect(@tree.find(3)).to be_a Node
+      end
+    end
   end
 
   describe "#level_order" do
