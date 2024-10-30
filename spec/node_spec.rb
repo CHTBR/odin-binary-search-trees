@@ -31,5 +31,10 @@ RSpec.describe Node do
   end
 
   describe "#<=>" do
+    it "compares two nodes based on their @data" do
+      node1 = Node.new 1
+      node2 = Node.new 2
+      expect(node2 > node1).to eql true
+    end
   end
 end
