@@ -3,6 +3,8 @@ require_relative "../lib/tree"
 require_relative "../lib/node"
 
 RSpec.describe Tree do
+  let(:random_node) { Node.new(rand(0..100)) }
+  
   describe "#build-tree" do
     context "when given an array of values of the same type" do
       it "returns the root node" do
@@ -130,6 +132,38 @@ RSpec.describe Tree do
   end
 
   describe "#height" do
+    context "when given an empty list" do
+      it "returns nil" do
+        expect(subject.height(random_node))).to eql nil
+      end
+    end
+
+    context "when given a non-empty list" do
+      before do
+        @tree = subject
+        @tree.build_tree [1, 2, 3, 4, 5]
+      end
+
+      context "when asked for a non-existent value" do
+        it "returns nil" do
+          expect(@tree.height(random_node)).to eql nil
+        end
+      end
+
+      context "when asked for a leaf node" do
+        it "returns 0" do
+          expect(@tree.height(@tree.find(5))).to eql 0
+        end
+      end
+
+      it "returns the height of the root node" do
+        expect(@tree.height(@tree.root)).to eql 2
+      end
+
+      it "returns the height of a node" do
+        expect(@tree.height(@tree.find(4))).to eql 1
+      end
+    end
   end
 
   describe "#depth" do
