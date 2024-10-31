@@ -89,7 +89,24 @@ class Tree
     [left_height, right_height].max + 1
   end
 
-  def depth(node); end
+  def depth(node)
+    return nil if _empty_tree?
+
+    current = @root
+    depth = 0
+    until current.left_node.nil? && current.right_node.nil?
+      if current.data > node.data
+        current = current.left_node
+      elsif current.data <  node.data 
+        current = current.right_node
+      else
+        return depth
+      end
+      depth += 1
+    end
+
+    nil
+  end
 
   def balanced?; end
 
