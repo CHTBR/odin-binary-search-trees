@@ -36,11 +36,12 @@ class Tree
 
   private
 
-  def _build_tree(arr, start_index, end_index)
+  def _build_tree(arr, start_index, end_index, direction = "mid")
     mid = start_index + ((end_index - start_index) / 2)
+    mid += 1 if end_index - start_index == 1 && direction == "left"
     root = Node.new(arr[mid])
-    root.left_node = _build_tree(arr, start_index, mid - 1) unless mid == start_index
-    root.right_node = _build_tree(arr, mid + 1, end_index) unless mid == end_index
+    root.left_node = _build_tree(arr, start_index, mid - 1, "left") unless mid == start_index
+    root.right_node = _build_tree(arr, mid + 1, end_index, "right") unless mid == end_index
     root
   end
 end
