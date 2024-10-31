@@ -230,5 +230,29 @@ RSpec.describe Tree do
   end
 
   describe "#rebalance" do
+    before do
+      @tree = subject
+      @tree.build_tree [1, 2, 3, 4, 5]
+      @tree.insert(-1)
+      @tree.insert(-7)
+      @tree.insert(-19)
+      @tree.insert(-16)
+    end
+
+    it "returns the new root element" do
+      expect(@tree.rebalance).to eql 1
+    end
+
+    it "keeps the elements from the unbalanced tree" do
+      original_elements = @tree.inorder.sort
+      @tree.rebalance
+      expect(@tree.inorder.sort).to eql original_elements
+    end
+
+    it "creates a balanced tree from an unbalanced tree" do
+      expect(@tree.balanced?).to eql false
+      @tree.rebalance
+      expect(@tree.balanced?).to eql true
+    end
   end
 end
