@@ -80,7 +80,12 @@ class Tree
     values
   end
 
-  def height(node); end
+  def height(node)
+    return nil if _empty_tree?
+    left_height = node.left_node.nil? ? (-1) : height(node.left_node)
+    right_height = node.right_node.nil? ? (-1) : height(node.right_node)
+    [left_height, right_height].max + 1
+  end
 
   def depth(node); end
 
