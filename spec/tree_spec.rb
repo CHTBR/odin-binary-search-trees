@@ -120,15 +120,83 @@ RSpec.describe Tree do
   end
 
   describe "#level_order" do
+    before do
+      @tree = subject
+      @tree.build_tree [1, 2, 3, 4, 5]
+      @element_order = [3, 2, 4, 1, 5]
+    end
+
+    context "when no block is given" do
+      it "returns an array of all the values in the level order" do
+        expect(@tree.level_order).to eql @element_order
+      end
+    end
+
+    it "passes values to the block in the level_order" do
+      values = []
+      @tree.level_order { |value| values << value }
+      expect(values).to eql @element_order
+    end
   end
 
   describe "#inorder" do
+    before do
+      @tree = subject
+      @tree.build_tree [1, 2, 3, 4, 5]
+      @element_order = [1, 2, 3, 4, 5]
+    end
+
+    context "when no block is given" do
+      it "returns an array of all the values in the level order" do
+        expect(@tree.inorder).to eql @element_order
+      end
+    end
+
+    it "passes values to the block in the level_order" do
+      values = []
+      @tree.inorder { |value| values << value }
+      expect(values).to eql @element_order
+    end
   end
 
   describe "#preorder" do
+    before do
+      @tree = subject
+      @tree.build_tree [1, 2, 3, 4, 5]
+      @element_order = [3, 2, 1, 4, 5]
+    end
+
+    context "when no block is given" do
+      it "returns an array of all the values in the level order" do
+        expect(@tree.preorder).to eql @element_order
+      end
+    end
+
+    it "passes values to the block in the level_order" do
+      values = []
+      @tree.preorder { |value| values << value }
+      expect(values).to eql @element_order
+    end
   end
 
   describe "#postorder" do
+    before do
+      @tree = subject
+      @tree.build_tree [1, 2, 3, 4, 5]
+      @element_order = [1, 2, 5, 4, 3]
+    end
+
+    context "when no block is given" do
+      it "returns an array of all the values in the level order" do
+        expect(@tree.postorder).to eql @element_order
+      end
+    end
+
+    it "passes values to the block in the level_order" do
+      values = []
+      @tree.postorder { |value| values << value }
+      expect(values).to eql @element_order
+    end
   end
 
   describe "#height" do
