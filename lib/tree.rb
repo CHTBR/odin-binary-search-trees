@@ -55,7 +55,18 @@ class Tree
     nil
   end
 
-  def level_order; end
+  def level_order
+    queue = [@root]
+    values = []
+    while queue.size > 0 do
+      current = queue.shift
+      values << current.data
+      yield current.data if block_given?
+      queue << current.left_node unless current.left_node.nil?
+      queue << current.right_node unless current.right_node.nil?
+    end
+    values
+  end
 
   def inorder
     stack = [@root]
