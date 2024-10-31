@@ -10,7 +10,29 @@ class Tree
     @root.data
   end
 
-  def insert(value); end
+  def insert(value)
+    new_node = Node.new(value)
+    return @root = new_node if _empty_tree?
+
+    current = @root
+    until current.left_node.nil? && current.right_node.nil?
+      if current.data > value
+        current = current.left_node
+      elsif current.data < value
+        current = current.right_node
+      else
+        return current
+      end
+    end
+
+    if current.data < value
+      current.right_node = new_node
+    else
+      current.left_node = new_node
+    end
+
+    nil
+  end
 
   def delete(value); end
 
