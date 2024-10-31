@@ -29,6 +29,7 @@ class Tree
         stack << current.left_node unless current.left_node.nil?
       else
         values << current
+        yield current if block_given?
       end
     end
     values
@@ -40,6 +41,7 @@ class Tree
     while stack.size > 0
       current = stack.pop
       values << current.data
+      yield current.data if block_given?
       stack << current.right_node unless current.right_node.nil?
       stack << current.left_node unless current.left_node.nil?
     end
@@ -57,6 +59,7 @@ class Tree
         stack << current.left_node unless current.left_node.nil?
       else
         values << current
+        yield current if block_given?
       end
     end
     values
