@@ -28,6 +28,8 @@ class Tree
         return current
       end
     end
+    return current if current.data == value
+
     nil
   end
 
