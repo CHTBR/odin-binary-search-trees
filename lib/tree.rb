@@ -18,7 +18,21 @@ class Tree
 
   def level_order; end
 
-  def inorder; end
+  def inorder
+    stack = [@root]
+    values = []
+    while stack.size > 0
+      current = stack.pop
+      if current.is_a? Node
+        stack << current.right_node unless current.right_node.nil?
+        stack << current.data
+        stack << current.left_node unless current.left_node.nil?
+      else
+        values << current
+      end
+    end
+    values
+  end
 
   def preorder; end
 
