@@ -14,7 +14,22 @@ class Tree
 
   def delete(value); end
 
-  def find(value); end
+  def find(value)
+    return nil if _empty_tree?
+
+    current = @root
+    return current if current.data == value
+    until current.left_node.nil? && current.right_node.nil?
+      if current.data > value
+        current = current.left_node
+      elsif current.data < value
+        current = current.right_node
+      else
+        return current
+      end
+    end
+    nil
+  end
 
   def level_order; end
 
@@ -84,5 +99,9 @@ class Tree
     root.left_node = _build_tree(arr, start_index, mid - 1, "left") unless mid == start_index
     root.right_node = _build_tree(arr, mid + 1, end_index, "right") unless mid == end_index
     root
+  end
+
+  def _empty_tree?
+    @root.nil?
   end
 end
