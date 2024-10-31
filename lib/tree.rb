@@ -16,9 +16,9 @@ class Tree
 
     current = @root
     until current.left_node.nil? && current.right_node.nil?
-      if current.data > value
+      if current.data > value && !current.left_node.nil?
         current = current.left_node
-      elsif current.data < value
+      elsif current.data < value && !current.right_node.nil?
         current = current.right_node
       else
         return current
@@ -130,7 +130,11 @@ class Tree
     nil
   end
 
-  def balanced?; end
+  def balanced?
+    return nil if _empty_tree?
+
+    _balanced?(@root)[0]
+  end
 
   def rebalance; end
 
@@ -145,6 +149,12 @@ class Tree
     root.left_node = _build_tree(arr, start_index, mid - 1, "left") unless mid == start_index
     root.right_node = _build_tree(arr, mid + 1, end_index, "right") unless mid == end_index
     root
+  end
+
+  def _balanced?(root)
+    left_tree = root.left_node.nil? ? [true, 0] : _balanced?(root.left_node)
+    right_tree = root.right_node.nil? ? [true, 0] : _balanced?(root.right_node)
+    [left_tree[0] && right_tree[0] && (right_tree[1] - left_tree[1]).abs <= 1, [left_tree[1], right_tree[1]].max + 1]
   end
 
   def _empty_tree?
