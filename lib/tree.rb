@@ -136,7 +136,10 @@ class Tree
     _balanced?(@root)[0]
   end
 
-  def rebalance; end
+  def rebalance
+    data = inorder
+    build_tree data
+  end
 
   def root = @root.data
 
