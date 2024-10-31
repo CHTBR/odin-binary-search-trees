@@ -4,7 +4,7 @@ require_relative "../lib/node"
 
 RSpec.describe Tree do
   let(:random_node) { Node.new(rand(50..100)) }
-  
+
   describe "#build-tree" do
     context "when given an array of values of the same type" do
       it "returns the root node" do
@@ -58,13 +58,13 @@ RSpec.describe Tree do
   end
 
   describe "#delete" do
-    context "when given an empty list" do
+    context "when given an empty tree" do
       it "returns nil" do
         expect(subject.delete(3)).to eql nil
       end
     end
 
-    context "when given a non-empty list" do
+    context "when given a non-empty tree" do
       before do
         @tree = subject
         @tree.build_tree [1, 2, 3, 4, 5]
@@ -95,13 +95,13 @@ RSpec.describe Tree do
   end
 
   describe "#find" do
-    context "when given an empty list" do
+    context "when given an empty tree" do
       it "returns nil" do
         expect(subject.find(rand(0..100))).to eql nil
       end
     end
 
-    context "when given a non-empty list" do
+    context "when given a non-empty tree" do
       before do
         @tree = subject
         @tree.build_tree [1, 2, 3, 4, 5]
@@ -132,13 +132,13 @@ RSpec.describe Tree do
   end
 
   describe "#height" do
-    context "when given an empty list" do
+    context "when given an empty tree" do
       it "returns nil" do
         expect(subject.height(random_node)).to eql nil
       end
     end
 
-    context "when given a non-empty list" do
+    context "when given a non-empty tree" do
       before do
         @tree = subject
         @tree.build_tree [1, 2, 3, 4, 5]
@@ -167,13 +167,13 @@ RSpec.describe Tree do
   end
 
   describe "#depth" do
-    context "when given an empty list" do
+    context "when given an empty tree" do
       it "returns nil" do
         expect(subject.depth(random_node)).to eql nil
       end
     end
 
-    context "when given a non-empty list" do
+    context "when given a non-empty tree" do
       before do
         @tree = subject
         @tree.build_tree [1, 2, 3, 4, 5]
@@ -198,6 +198,35 @@ RSpec.describe Tree do
   end
 
   describe "#balanced?" do
+    context "when given an empty tree" do
+      it "returns nil" do
+        expect(subject.balanced?).to eql nil
+      end
+    end
+
+    context "when given a non-empty tree" do
+      it "returns true for a tree with 1 element" do
+        @tree = subject
+        @tree.build_tree 1
+        expect(@tree.balanced?).to eql true
+      end
+
+      it "returns true for a balanced tree" do
+        @tree = subject
+        @tree.insert 2
+        @tree.insert 1
+        @tree.insert 3
+        expect(@tree.balanced?).to eql true
+      end
+
+      it "returns false for an unbalanced tree" do
+        @tree = subject
+        @tree.insert 1
+        @tree.insert 2
+        @tree.insert 3
+        expect(@tree.balanced?).to eql false
+      end
+    end
   end
 
   describe "#rebalance" do
