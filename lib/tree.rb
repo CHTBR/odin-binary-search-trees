@@ -34,9 +34,33 @@ class Tree
     values
   end
 
-  def preorder; end
+  def preorder
+    stack = [@root]
+    values = []
+    while stack.size > 0
+      current = stack.pop
+      values << current.data
+      stack << current.right_node unless current.right_node.nil?
+      stack << current.left_node unless current.left_node.nil?
+    end
+    values
+  end
 
-  def postorder; end
+  def postorder
+    stack = [@root]
+    values = []
+    while stack.size > 0
+      current = stack.pop
+      if current.is_a? Node
+        stack << current.data
+        stack << current.right_node unless current.right_node.nil?
+        stack << current.left_node unless current.left_node.nil?
+      else
+        values << current
+      end
+    end
+    values
+  end
 
   def height(node); end
 
