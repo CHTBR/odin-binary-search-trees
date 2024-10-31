@@ -1,8 +1,14 @@
+require_relative "node"
+
 # A class for managing the creation and traversal of a tree DS
 class Tree
   def initialize(arr = []); end
 
-  def build_tree(arr); end
+  def build_tree(arr)
+    arr = arr.uniq.sort
+    @root = _build_tree(arr, 0, arr.size - 1)
+    @root.data
+  end
 
   def insert(value); end
 
@@ -25,4 +31,16 @@ class Tree
   def balanced?; end
 
   def rebalance; end
+
+  def root = @root.data
+
+  private
+
+  def _build_tree(arr, start_index, end_index)
+    mid = start_index + ((end_index - start_index) / 2)
+    root = Node.new(arr[mid])
+    root.left_node = _build_tree(arr, start_index, mid - 1) unless mid == start_index
+    root.right_node = _build_tree(arr, mid + 1, end_index) unless mid == end_index
+    root
+  end
 end
