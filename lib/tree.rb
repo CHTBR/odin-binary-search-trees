@@ -10,8 +10,14 @@ class Tree
     @root.data
   end
 
-  def insert(value)
-    new_node = Node.new(value)
+  def insert(value_or_node)
+    if value_or_node.is_a? Node
+      value = value_or_node.data
+      new_node = value_or_node
+    else
+      value = value_or_node
+      new_node = Node.new(value)
+    end
     return @root = new_node if _empty_tree?
 
     current = @root
@@ -21,20 +27,54 @@ class Tree
       elsif current.data < value && !current.right_node.nil?
         current = current.right_node
       else
-        return current
+        break
       end
     end
 
     if current.data < value
       current.right_node = new_node
-    else
+    elsif current.data > value
       current.left_node = new_node
+    else
+      return current
     end
 
     nil
   end
 
-  def delete(value); end
+  def delete(value)
+    return nil if _empty_tree?
+
+    current_node = @root
+    parent_node = nil
+    until current_node.left_node.nil? && current_node.right_node.nil?
+      if current_node.data > value && !current_node.left_node.nil?
+        parent_node = current_node
+        current_node = current_node.left_node
+      elsif current_node.data < value && !current_node.right_node.nil?
+        parent_node = current_node
+        current_node = current_node.right_node
+      else
+        break
+      end
+    end
+
+    return nil if current_node.data != value
+
+    deleted_node = current_node
+    if parent_node.nil? 
+      @root = nil
+    elsif !parent_node.left_node.nil? && parent_node.left_node == deleted_node
+      parent_node.left_node = nil
+    else
+      parent_node.right_node = nil
+    end
+
+    insert(deleted_node.left_node) unless deleted_node.left_node.nil?
+    insert(deleted_node.right_node) unless deleted_node.right_node.nil?
+
+    deleted_node.data
+  end
 
   def find(value)
     return nil if _empty_tree?
@@ -42,9 +82,9 @@ class Tree
     current = @root
     return current if current.data == value
     until current.left_node.nil? && current.right_node.nil?
-      if current.data > value
+      if current.data > value && !current.left_node.nil?
         current = current.left_node
-      elsif current.data < value
+      elsif current.data < value && !current.right_node.nil?
         current = current.right_node
       else
         return current
@@ -128,9 +168,9 @@ class Tree
     current = @root
     depth = 0
     until current.left_node.nil? && current.right_node.nil?
-      if current.data > node.data
+      if current.data > node.data && !current.left_node.nil?
         current = current.left_node
-      elsif current.data <  node.data 
+      elsif current.data < node.data && !current.right_node.nil?
         current = current.right_node
       else
         return depth
