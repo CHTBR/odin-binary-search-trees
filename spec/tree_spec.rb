@@ -8,7 +8,7 @@ RSpec.describe Tree do
   describe "#build-tree" do
     context "when given an array of values of the same type" do
       it "returns the root node" do
-        expect(build_tree([3, 4, 5, 1, 2])).to eql 3
+        expect(subject.build_tree([3, 4, 5, 1, 2])).to eql 3
       end
 
       it "assigns the root node to @root" do
@@ -71,24 +71,66 @@ RSpec.describe Tree do
       end
 
       context "when deleting an existing element" do
-        it "returns the node data" do
-          expect(@tree.remove(4)).to eql 4
+        context "when deleting a leaf node" do
+          it "returns the node data" do
+            expect(@tree.delete(1)).to eql 1
+          end
+
+          it "removes the node from the tree" do
+            @tree.delete 1
+            expect(@tree.find(1)).to eql nil
+          end
+
+          it "preserves all the other elements in the tree" do
+            old_elements = @tree.inorder - [1]
+            @tree.delete 1
+            expect(@tree.inorder.sort).to eql old_elements.sort
+          end
         end
 
-        it "removes the node from the tree" do
-          @tree.remove 1
-          expect(@tree.find(1)).to eql nil
+        context "when deleting a normal node" do
+          it "returns the node data" do
+            expect(@tree.delete(4)).to eql 4
+          end
+
+          it "removes the node from the tree" do
+            @tree.delete 4
+            expect(@tree.find(4)).to eql nil
+          end
+
+          it "preserves all the other elements in the tree" do
+            old_elements = @tree.inorder - [4]
+            @tree.delete 4
+            expect(@tree.inorder.sort).to eql old_elements.sort
+          end
         end
 
-        it "correctly removes and replaces the root node" do
-          @tree.remove 3
-          expect(@tree.root).to_not eql nil
+        context "when deleting the root node" do
+          it "returns the node data" do
+            expect(@tree.delete(3)).to eql 3
+          end
+
+          it "removes the root node" do
+            @tree.delete 3
+            expect(@tree.root).to_not eql 3
+          end
+
+          it "replaces the root node with a different node" do
+            @tree.delete 3
+            expect(@tree.root).to be_a Integer
+          end
+
+          it "preserves all the other elements in the tree" do
+            old_elements = @tree.inorder - [3]
+            @tree.delete 3
+            expect(@tree.inorder.sort).to eql old_elements.sort
+          end
         end
       end
 
       context "when deleting a non-existent element" do
         it "returns nil" do
-          expect(@tree.remove(10)).to eql nil
+          expect(@tree.delete(10)).to eql nil
         end
       end
     end
@@ -113,8 +155,14 @@ RSpec.describe Tree do
         end
       end
 
+      context "when asked for a leaf node" do
+        it "returns the node holding the given value" do
+          expect(@tree.find(5).data).to eql 5
+        end
+      end
+
       it "returns the node holding the given value" do
-        expect(@tree.find(3)).to be_a Node
+        expect(@tree.find(3).data).to eql 3
       end
     end
   end
@@ -132,7 +180,7 @@ RSpec.describe Tree do
       end
     end
 
-    it "passes values to the block in the level_order" do
+    it "passes values to the block in the level order" do
       values = []
       @tree.level_order { |value| values << value }
       expect(values).to eql @element_order
@@ -147,12 +195,12 @@ RSpec.describe Tree do
     end
 
     context "when no block is given" do
-      it "returns an array of all the values in the level order" do
+      it "returns an array of all the values in the inorder" do
         expect(@tree.inorder).to eql @element_order
       end
     end
 
-    it "passes values to the block in the level_order" do
+    it "passes values to the block in the inorder" do
       values = []
       @tree.inorder { |value| values << value }
       expect(values).to eql @element_order
@@ -167,12 +215,12 @@ RSpec.describe Tree do
     end
 
     context "when no block is given" do
-      it "returns an array of all the values in the level order" do
+      it "returns an array of all the values in the preorder" do
         expect(@tree.preorder).to eql @element_order
       end
     end
 
-    it "passes values to the block in the level_order" do
+    it "passes values to the block in the preorder" do
       values = []
       @tree.preorder { |value| values << value }
       expect(values).to eql @element_order
@@ -187,12 +235,12 @@ RSpec.describe Tree do
     end
 
     context "when no block is given" do
-      it "returns an array of all the values in the level order" do
+      it "returns an array of all the values in the postorder" do
         expect(@tree.postorder).to eql @element_order
       end
     end
 
-    it "passes values to the block in the level_order" do
+    it "passes values to the block in the postorder" do
       values = []
       @tree.postorder { |value| values << value }
       expect(values).to eql @element_order
@@ -212,20 +260,16 @@ RSpec.describe Tree do
         @tree.build_tree [1, 2, 3, 4, 5]
       end
 
-      context "when asked for a non-existent value" do
-        it "returns nil" do
-          expect(@tree.height(random_node)).to eql nil
-        end
-      end
-
       context "when asked for a leaf node" do
         it "returns 0" do
-          expect(@tree.height(@tree.find(5))).to eql 0
+          tree = subject
+          tree.build_tree [1, 2, 3, 4, 5]
+          expect(tree.height(tree.find(5))).to eql 0
         end
       end
 
       it "returns the height of the root node" do
-        expect(@tree.height(@tree.root)).to eql 2
+        expect(@tree.height(@tree.find(3))).to eql 2
       end
 
       it "returns the height of a node" do
@@ -255,7 +299,7 @@ RSpec.describe Tree do
 
       context "when asked for the root node" do
         it "returns 0" do
-          expect(@tree.depth(@tree.root)).to eql 0
+          expect(@tree.depth(@tree.find(3))).to eql 0
         end
       end
 
@@ -274,25 +318,25 @@ RSpec.describe Tree do
 
     context "when given a non-empty tree" do
       it "returns true for a tree with 1 element" do
-        @tree = subject
-        @tree.build_tree 1
-        expect(@tree.balanced?).to eql true
+        tree = subject
+        tree.insert 1
+        expect(tree.balanced?).to eql true
       end
 
       it "returns true for a balanced tree" do
-        @tree = subject
-        @tree.insert 2
-        @tree.insert 1
-        @tree.insert 3
-        expect(@tree.balanced?).to eql true
+        tree = subject
+        tree.insert 2
+        tree.insert 1
+        tree.insert 3
+        expect(tree.balanced?).to eql true
       end
 
       it "returns false for an unbalanced tree" do
-        @tree = subject
-        @tree.insert 1
-        @tree.insert 2
-        @tree.insert 3
-        expect(@tree.balanced?).to eql false
+        tree = subject
+        tree.insert 1
+        tree.insert 2
+        tree.insert 3
+        expect(tree.balanced?).to eql false
       end
     end
   end
