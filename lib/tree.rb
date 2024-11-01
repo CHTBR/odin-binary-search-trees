@@ -2,7 +2,9 @@ require_relative "node"
 
 # A class for managing the creation and traversal of a tree DS
 class Tree
-  def initialize(arr = []); end
+  def initialize(arr = [])
+    build_tree arr if arr.size > 0
+  end
 
   def build_tree(arr)
     arr = arr.uniq.sort
